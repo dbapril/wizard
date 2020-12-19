@@ -1,29 +1,33 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+    <ConnectingWizard v-if="connectingData.length" :steps="connectingData" />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import HelloWorld from "./components/HelloWorld.vue";
+import ConnectingWizard from "./components/ConnectingWizard.vue";
+import jsonData from "@/data.json";
 
 export default Vue.extend({
   name: "App",
+
   components: {
-    HelloWorld
-  }
+    ConnectingWizard,
+  },
+
+  data() {
+    return {};
+  },
+
+  computed: {
+    connectingData() {
+      return jsonData ?? [];
+    },
+  },
 });
 </script>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+@import url("./assets/scss/main.scss");
 </style>
