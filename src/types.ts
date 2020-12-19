@@ -3,7 +3,7 @@ export interface IConnectingStep {
   variants: Array<IVariant>
 }
 
-interface IVariant {
+export interface IVariant {
   color: String,
   description: String,
   options: Array<IOption>,
