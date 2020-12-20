@@ -2,14 +2,7 @@
   <div class="wizard-window d-flex column">
     <div class="wizard-body">
       <div v-for="(step, index) of steps" :key="step.title">
-        <hr class="divider" />
-        <h3 class="text-left">{{ step.title }}</h3>
-        <VariantCard
-          v-for="variant of step.variants"
-          :key="variant.title"
-          :variant="variant"
-          class="mb-2"
-        />
+        <ConnectingStep :step="step" />
         <hr v-if="index === steps.length - 1" class="divider" />
       </div>
     </div>
@@ -22,8 +15,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import VariantCard from "./VariantCard.vue";
 import formatPrice from "../utils/formatPrice";
+import ConnectingStep from "./ConnectingStep.vue"
 
 export default Vue.extend({
   name: "ConnectingWizard",
@@ -35,7 +28,7 @@ export default Vue.extend({
     },
   },
 
-  components: { VariantCard },
+  components: { ConnectingStep },
 
   computed: {
     totalAmount() {
@@ -71,9 +64,4 @@ export default Vue.extend({
   }
 }
 
-.divider {
-  border: none;
-  height: 2px;
-  background-color: #dddddd;
-}
 </style>

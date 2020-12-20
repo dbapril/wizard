@@ -45,11 +45,21 @@
       "ecmaVersion": 2020
     },
     "rules": {
-      "comma-dangle": ["error", "always-multiline"]
+      "comma-dangle": [
+        "error",
+        "always-multiline"
+      ],
+      "vue/no-reserved-keys": [
+        "error",
+        {
+          "reserved": [],
+          "groups": []
+        }
+      ]
     }
   },
   "prettier": {
-    "trailingComma" : "all"
+    "trailingComma": "all"
   },
   "browserslist": [
     "> 1%",

@@ -12,6 +12,12 @@ export interface IVariant {
   title: string
 }
 
+export interface IVariantForChoose extends IVariant {
+  id: number,
+  isChosen: boolean;
+  totalPrice: number
+}
+
 export interface IOption {
   title: string,
   price: number

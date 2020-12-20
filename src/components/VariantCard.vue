@@ -14,7 +14,7 @@
           {{ description }}
         </p>
       </div>
-      <form class="choosing-section">
+      <form ref="form" class="choosing-section">
         <div
           v-for="option of variant.options"
           :key="option.title"
@@ -30,7 +30,7 @@
         </div>
         <div v-for="selectItem of variant.select" :key="selectItem.title">
           <span class="caption d-block mb-1">{{ selectItem.title }}</span>
-          <select v-model="chosenSelectItem" class="select-box mb-2" required>
+          <select v-model="chosenSelectItem" ref="select" class="select-box mb-2" required>
             <option
               v-for="option of selectItem.items"
               :key="option.title"
@@ -40,7 +40,13 @@
             </option>
           </select>
         </div>
-        <button :class="readyForConfirm" class="btn btn-block">Выбрать</button>
+        <button
+          :class="variant.isChosen ? 'is-chosen' : 'not-chosen'"
+          class="btn btn-block"
+          @click.prevent="chooseVariant(variant)"
+        >
+          {{ variant.isChosen ? "Выбрано" : "Выбрать" }}
+        </button>
       </form>
     </div>
   </div>
@@ -48,7 +54,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { IVariant, IOption } from "../types";
+import { IVariantForChoose, IOption } from "../types";
 import formatPrice from "../utils/formatPrice";
 
 export default Vue.extend({
@@ -56,7 +62,7 @@ export default Vue.extend({
 
   props: {
     variant: {
-      type: Object as () => IVariant,
+      type: Object as () => IVariantForChoose,
       required: true,
     },
   },
@@ -86,17 +92,18 @@ export default Vue.extend({
 
       return optionsTotalPrice + selectedItemPrice;
     },
-    readyForConfirm() {
-      if (!this.chosenOptions.length || !this.chosenSelectItem?.price) {
-        return "btn-not-ready";
-      }
-      return "btn-is-ready";
-    },
   },
 
   methods: {
     printPrice(price: number): string {
       return formatPrice(price);
+    },
+    chooseVariant(variant: IVariantForChoose) {
+      this.$emit("variant-chosen", {
+        ...variant,
+        isChosen: !variant.isChosen,
+        totalPrice: this.totalVariantPrice,
+      });
     },
   },
 });
@@ -134,11 +141,11 @@ export default Vue.extend({
   font-size: 0.8rem;
 }
 
-.btn-not-ready {
+.not-chosen {
   background-color: #99abba;
 }
 
-.btn-is-ready {
+.is-chosen {
   background-color: #2fcb5a;
 }
 </style>
