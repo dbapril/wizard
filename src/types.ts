@@ -1,18 +1,23 @@
 export interface IConnectingStep {
-  title: String,
+  title: string,
   variants: Array<IVariant>
 }
 
 export interface IVariant {
-  color: String,
-  description: String,
+  color: string,
+  description: string,
   options: Array<IOption>,
-  price_default: Number,
-  select: Array<any>,
-  title: String
+  price_default: number,
+  select: Array<ISelectItem>,
+  title: string
 }
 
-interface IOption {
-  title: String,
-  price: Number
+export interface IOption {
+  title: string,
+  price: number
+}
+
+interface ISelectItem {
+  title: string,
+  items: Array<IOption>
 }

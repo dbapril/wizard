@@ -1,18 +1,21 @@
 <template>
-  <div class="wizard-window">
-    <hr class="divider" />
-    <div v-for="step of steps" :key="step.title">
-      <p>{{ step.title }}</p>
-      <VariantCard
-        v-for="variant of step.variants"
-        :key="variant.title"
-        :variant="variant"
-      />
+  <div class="wizard-window d-flex column">
+    <div class="wizard-body">
+      <div v-for="(step, index) of steps" :key="step.title">
+        <hr class="divider" />
+        <h3 class="text-left">{{ step.title }}</h3>
+        <VariantCard
+          v-for="variant of step.variants"
+          :key="variant.title"
+          :variant="variant"
+          class="mb-2"
+        />
+        <hr v-if="index === steps.length - 1" class="divider" />
+      </div>
     </div>
-    <hr class="divider" />
-    <div class="wizard-footer">
+    <div class="wizard-footer pa-1 d-flex">
       <h2>ИТОГО К ОПЛАТЕ</h2>
-      <span>{{ totalAmount }}</span>
+      <h2 class="font-thin">{{ printPrice(totalAmount) }}</h2>
     </div>
   </div>
 </template>
@@ -20,6 +23,7 @@
 <script lang="ts">
 import Vue from "vue";
 import VariantCard from "./VariantCard.vue";
+import formatPrice from "../utils/formatPrice";
 
 export default Vue.extend({
   name: "ConnectingWizard",
@@ -38,27 +42,38 @@ export default Vue.extend({
       return 0;
     },
   },
+
+  methods: {
+    printPrice() {
+      return formatPrice(this.totalAmount);
+    },
+  },
 });
 </script>
 
 <style scoped lang="scss">
-.wizard-window {
-  padding: 20px;
-  max-width: 780px;
-  background-color: #fff;
+.wizard {
+  &-window {
+    padding: 20px;
+    max-width: 780px;
+    max-height: 590px;
+    overflow: hidden;
+    background-color: #fff;
+  }
+  &-body {
+    overflow: hidden;
+  }
+  &-footer {
+    display: flex;
+    justify-content: space-between;
+    background-color: #5ecc5a;
+    color: #fff;
+  }
 }
 
 .divider {
   border: none;
   height: 2px;
-  /* color: rgb(216, 217, 231); */
   background-color: #dddddd;
-}
-
-.wizard-footer {
-  display: flex;
-  justify-content: space-between;
-  background-color: #5ecc5a;
-  color: #fff;
 }
 </style>
