@@ -3,16 +3,19 @@
     <div class="wizard-body">
       <hr class="divider mt-0" />
       <h3 class="text-left">{{ currentStep.title }}</h3>
-      <ConnectingStep
-        v-if="currentStepIsSet"
-        :step="currentStep"
-        :key="currentStep.stepId"
-        @step-variant-chosen="chooseStepVariant"
-      />
+      <transition name="step">
+        <ConnectingStep
+          v-if="currentStepIsSet"
+          :step="currentStep"
+          :key="currentStep.stepId"
+          @step-variant-chosen="chooseStepVariant"
+          class="connecting-step"
+        />
+      </transition>
     </div>
     <div class="wizard-footer pa-1 d-flex">
       <h2>ИТОГО К ОПЛАТЕ</h2>
-      <h2 class="font-thin">{{ printPrice(totalAmount) }}</h2>
+      <h2 class="font-thin">{{ printPrice() }}</h2>
     </div>
   </div>
 </template>
@@ -73,7 +76,8 @@ export default Vue.extend({
       const index = this.chosenVariants.findIndex(
         (variant) => variant.stepId === theVariant.stepId,
       );
-      if (index) {
+
+      if (index != -1) {
         this.$set(this.chosenVariants, index, theVariant);
       } else {
         this.chosenVariants = [...this.chosenVariants, theVariant];
@@ -96,6 +100,7 @@ export default Vue.extend({
 .wizard {
   &-window {
     padding: 20px;
+    height: 80%;
     max-width: 780px;
     max-height: 590px;
     overflow: hidden;
@@ -110,5 +115,14 @@ export default Vue.extend({
     background-color: #5ecc5a;
     color: #fff;
   }
+}
+
+.step-enter-active,
+.step-leave-active {
+  transition: opacity 0.5s;
+}
+.step-enter,
+.step-leave-to {
+  opacity: 0;
 }
 </style>
