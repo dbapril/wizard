@@ -3,6 +3,10 @@ export interface IConnectingStep {
   variants: Array<IVariant>
 }
 
+export interface IConnectingStepForChoose extends IConnectingStep {
+  stepId: number
+}
+
 export interface IVariant {
   color: string,
   description: string,
@@ -14,8 +18,9 @@ export interface IVariant {
 
 export interface IVariantForChoose extends IVariant {
   id: number,
-  isChosen: boolean;
-  totalPrice: number
+  isChosen: boolean,
+  totalPrice: number,
+  stepId: number
 }
 
 export interface IOption {

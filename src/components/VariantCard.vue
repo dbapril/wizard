@@ -23,6 +23,7 @@
           <input
             v-model="chosenOptions"
             :value="option"
+            :disabled="variant.isChosen"
             type="checkbox"
             class="float-left"
           />
@@ -30,15 +31,30 @@
         </div>
         <div v-for="selectItem of variant.select" :key="selectItem.title">
           <span class="caption d-block mb-1">{{ selectItem.title }}</span>
-          <select v-model="chosenSelectItem" ref="select" class="select-box mb-2" required>
-            <option
-              v-for="option of selectItem.items"
-              :key="option.title"
-              :value="option"
+          <div class="mb-2">
+            <select
+              v-model="chosenSelectItem"
+              :disabled="variant.isChosen"
+              ref="select"
+              class="select-box"
+              required
             >
-              {{ option.title }}
-            </option>
-          </select>
+              <option
+                v-for="option of selectItem.items"
+                :key="option.title"
+                :value="option"
+              >
+                {{ option.title }}
+              </option>
+            </select>
+            <div class="relative">
+              <span
+                v-show="selectError"
+                class="pa-1 caption text-error absolute error-tip"
+                >{{ selectError }}</span
+              >
+            </div>
+          </div>
         </div>
         <button
           :class="variant.isChosen ? 'is-chosen' : 'not-chosen'"
@@ -71,6 +87,7 @@ export default Vue.extend({
     return {
       chosenOptions: [] as Array<IOption>,
       chosenSelectItem: {} as IOption,
+      selectError: "",
     };
   },
 
@@ -99,11 +116,27 @@ export default Vue.extend({
       return formatPrice(price);
     },
     chooseVariant(variant: IVariantForChoose) {
+      if (!this.validate()) return;
+
       this.$emit("variant-chosen", {
         ...variant,
         isChosen: !variant.isChosen,
         totalPrice: this.totalVariantPrice,
       });
+    },
+    validate() {
+      if (
+        this.variant.select.length &&
+        !Object.entries(this.chosenSelectItem).length
+      ) {
+        this.reportError();
+        return false;
+      }
+      return true;
+    },
+    reportError() {
+      this.selectError = "Выберите одно из значений";
+      setTimeout(() => (this.selectError = ""), 2000);
     },
   },
 });
@@ -147,5 +180,13 @@ export default Vue.extend({
 
 .is-chosen {
   background-color: #2fcb5a;
+}
+
+.error-tip {
+  display: block;
+  box-sizing: border-box;
+  border: 1px solid red;
+  width: 100%;
+  background: #fff;
 }
 </style>

@@ -1,7 +1,5 @@
 <template>
   <div>
-    <hr class="divider" />
-    <h3 class="text-left">{{ step.title }}</h3>
     <VariantCard
       v-for="variant of variantsForChoose"
       :key="variant.id"
@@ -14,7 +12,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { IConnectingStep, IVariantForChoose } from "../types";
+import { IConnectingStepForChoose, IVariantForChoose } from "../types";
 import VariantCard from "./VariantCard.vue";
 
 export default Vue.extend({
@@ -24,7 +22,7 @@ export default Vue.extend({
 
   props: {
     step: {
-      type: Object as () => IConnectingStep,
+      type: Object as () => IConnectingStepForChoose,
       required: true,
     },
   },
@@ -32,6 +30,7 @@ export default Vue.extend({
   data() {
     return {
       variants: [] as Array<IVariantForChoose>,
+      chosenVariant: {},
     };
   },
 
@@ -51,6 +50,7 @@ export default Vue.extend({
       isChosen: false,
       id: index,
       totalPrice: 0,
+      stepId: this.step.stepId,
       ...variant,
     }));
   },
@@ -58,13 +58,15 @@ export default Vue.extend({
   methods: {
     chooseVariant(theVariant: IVariantForChoose) {
       if (theVariant.isChosen) {
-        this.variantsForChoose.forEach(variant => variant.isChosen = false);
+        this.variantsForChoose.forEach((variant) => (variant.isChosen = false));
       }
 
       const index = this.variantsForChoose.findIndex(
         (variant) => variant.id === theVariant.id,
       );
       this.$set(this.variantsForChoose, index, theVariant);
+
+      this.$emit("step-variant-chosen", theVariant);
     },
   },
 });
